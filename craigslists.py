@@ -12,7 +12,8 @@ from selenium.common.exceptions import ElementNotInteractableException
 # Gets area and searches the item asked for
 def item_search():
     global driver, item
-    area = input('What area are you looking you\'re looking the product from (ex: new york, boston, miami)? ').lower()
+    area = input(
+        'What area are you looking you\'re looking the product from (ex: new york, boston, miami)? ').lower()
     if ' ' in area:
         area = area.replace(' ', '')
 
@@ -33,7 +34,8 @@ def item_search():
 
 # Get's the next page
 def next_page():
-    next = driver.find_element_by_xpath('//*[@id="searchform"]/div[3]/div[3]/span[2]/a[3]')
+    next = driver.find_element_by_xpath(
+        '//*[@id="searchform"]/div[3]/div[3]/span[2]/a[3]')
     next.click()
 
 
@@ -49,9 +51,12 @@ def get_content():
     for product in products:
         data_dict = {}
         os.chdir(main_directory)
-        data_dict['title'] = product.find('a', {'class': 'result-title hdrlnk'}).text
-        data_dict['day_posted'] = product.find('time', {'class': 'result-date'}).text
-        data_dict['link'] = product.find('a', {'class': 'result-title hdrlnk'})['href']
+        data_dict['title'] = product.find(
+            'a', {'class': 'result-title hdrlnk'}).text
+        data_dict['day_posted'] = product.find(
+            'time', {'class': 'result-date'}).text
+        data_dict['link'] = product.find(
+            'a', {'class': 'result-title hdrlnk'})['href']
         meta = product.find('span', {'class': 'result-meta'}).find_all('span')
         data_dict['price'] = meta[0].text
         data_dict['location'] = meta[1].text
@@ -61,7 +66,7 @@ def get_content():
                 data_dict['title'] = data_dict['title'].replace(character, '')
 
         product_url = requests.get(data_dict['link'])
-        product_page = product_url.text 
+        product_page = product_url.text
         product_soup = bs(product_page, 'html.parser')
 
         try:
@@ -103,7 +108,8 @@ def get_content():
 
         if product_soup.find('p', {'class': 'attrgroup'}) is not None:
 
-            attributes = product_soup.find_all('p', {'class': 'attrgroup'})[-1].text
+            attributes = product_soup.find_all(
+                'p', {'class': 'attrgroup'})[-1].text
 
             with open('product.txt', 'a') as file:
                 file.write('\n\n' + attributes)
@@ -111,7 +117,7 @@ def get_content():
             att_text = open('product.txt', 'r')
 
             lines = att_text.readlines()
-            
+
             for line in lines:
                 line = line.strip()
                 if 'fuel:' in line:
