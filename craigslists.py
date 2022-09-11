@@ -5,6 +5,9 @@ import pandas as pd  # pip install pandas
 import os
 import time
 from selenium import webdriver  # pip install selenium
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
 
@@ -26,16 +29,20 @@ def item_search():
         break
 
     driver.get(f'https://{area}.craigslist.org/search/sss?')
+    # driver.find_element()
 
-    search = driver.find_element_by_xpath('//*[@id="query"]')
+    # search = driver.find_element_by_xpath('//*[@id="query"]')
+    search = driver.find_element(By.XPATH, '//*[@id="query"]')
     search.send_keys(item)
     search.send_keys(Keys.RETURN)
 
 
 # Get's the next page
 def next_page():
-    next = driver.find_element_by_xpath(
-        '//*[@id="searchform"]/div[3]/div[3]/span[2]/a[3]')
+    # next = driver.find_element_by_xpath('//*[@id="searchform"]/div[3]/div[3]/span[2]/a[3]')
+
+    next = driver.find_element(
+        By.XPATH, '//*[@id="searchform"]/div[3]/div[3]/span[2]/a[3]')
     next.click()
 
 
@@ -154,11 +161,17 @@ if __name__ == '__main__':
     print(os.getcwd())
     characters = {'/', '\\', '%', '*', '"', '<', '>', '|', ':', '?'}
 
-    path = os.getcwd() + "\\webdriver\\chromedriver.exe"
+    options = webdriver.ChromeOptions()
+
+    options.add_argument("--headless")
+
+    # path = os.getcwd() + "\\webdriver\\chromedriver.exe"
+    # driver = webdriver.Chrome(path, options=options)
+
+    driver = webdriver.Chrome(service=Service(
+        ChromeDriverManager().install()))
 
     main_directory = os.getcwd()
-
-    driver = webdriver.Chrome(path)
 
     lists = []
 
